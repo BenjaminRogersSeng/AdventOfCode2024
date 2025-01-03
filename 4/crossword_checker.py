@@ -47,6 +47,7 @@ def flatten_slices(matrix):
         if anti_diagonal:
             result.append(anti_diagonal)
 
+    
     return result
 
 def split_sublist_into_chunks(sublists, chunk_size, step_size):
