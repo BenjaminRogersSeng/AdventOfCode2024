@@ -36,24 +36,33 @@ with open(input_file, 'r') as file:
         else:
             raise Exception('Invalid mode')
      
-def find_index(rules, update):
+def organize_pages(rules, update):
+    update_organized = update.copy()
     for rule in rules:
-        rule.Li = update.index(rule.L) if rule.L in update else -1
-        rule.Ri = update.index(rule.R) if rule.R in update else -1
-        
+        if rule.L in update and rule.R in update:
+            rule.Li = update.index(rule.L)
+            rule.Ri = update.index(rule.R) 
+
+            if rule.Li > rule.Ri:
+                update_organized[rule.Li], update_organized[rule.Ri] = update_organized[rule.Ri], update_organized[rule.Li]
+    
+    return update_organized
+
 counter = 0
+middle_number_counter = 0
 
 for update in updates:
-    find_index(rules, update)
+    organized_pages = organize_pages(rules, update)
     rules_culled = [r for r in rules if r.Li != -1 and r.Ri != -1]
     
     if(all([r.correct() for r in rules_culled])):
         print(update, " - correct")
         counter += 1
+        middle_number_counter += organized_pages[(len(organized_pages)/2).__floor__()]
     else:
         print(update, " - incorrect")
         
     for rule in rules:
         rule.reset()
     
-print(counter)
+print(middle_number_counter)
