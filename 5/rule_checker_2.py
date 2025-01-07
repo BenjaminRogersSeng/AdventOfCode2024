@@ -1,4 +1,5 @@
 import os
+import functools
         
 input_file = os.path.join(os.path.dirname(__file__), 'input.txt')
 with open(input_file, 'r') as file:
@@ -20,13 +21,15 @@ for rule in RULES:
 # print(KEY_IS_LESS_THAN)
 
 def is_less_than(a, b):
+    if a not in KEY_IS_LESS_THAN:
+        return False
     return b in KEY_IS_LESS_THAN[a] 
 
-def sort_update(a, b):
+def sort_pages(a, b):
     if is_less_than(a, b):
         return -1
     elif is_less_than(b, a):
-        return 1
+        return +1
     else:
         return 0
     
@@ -48,7 +51,7 @@ for update in UPDATES:
         counter += get_middle_number(update)
     else:
         print(update, " - incorrect")
-        corrected_update = sorted(update, key=lambda x: (x, [is_less_than(x, y) for y in update]))
+        corrected_update = sorted(update, key=functools.cmp_to_key(sort_pages))
         counter_corrected += get_middle_number(corrected_update)
         print(f"{corrected_update} - {check_sorted(corrected_update)}")
 
